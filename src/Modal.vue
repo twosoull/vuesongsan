@@ -1,0 +1,33 @@
+<template>
+
+<div class="black-bg" v-if="모달창열렸니">
+    <div class="white-bg">
+      <img :src="원룸들[누른거].image" />
+      <h4>{{ 원룸들[누른거].title }}</h4>
+      <p>{{ 원룸들[누른거].content }}</p>
+      <p>{{ 원룸들[누른거].price }} 원</p>
+      <button>닫기</button> <!--사용불가-->
+      <Discount />
+    </div>
+  </div>
+  
+</template>
+  
+<script>
+export default {
+    name : 'Modal',
+    data(){
+
+    },
+    props :{
+        원룸들 : Array,
+        모달창열렸니 : Boolean,
+        누른거 : Number,
+    }
+}
+</script>
+  
+<style>
+
+</style>
+  
