@@ -1,13 +1,19 @@
 <template>
 
-  <Modal :원룸들="원룸들" :모달창열렸니="모달창열렸니" :누른거="누른거"/>
+<transition name="fade">
+  <Modal @closeModal="모달창열렸니=false;" 
+  :원룸들="원룸들" :모달창열렸니="모달창열렸니" :누른거="누른거"/>
+</transition>
 
   <div class="menu">
     <a v-for="(a,i) in 메뉴들" :key="i" >{{a}}</a>
   </div>
 
+  <Discount v-if="showDiscount" :DiscountValue="DiscountValue"/>
+  <button @click="priceSort">가격순정렬</button>
+  <button @click="sortBack">되돌리기</button>
+  <Card @openModal="모달창열렸니 = true; 누른거= $event" v-for="(a,i) in 원룸들" :원룸="원룸들[i]" :key="i"/>
 
-  <Card :원룸들="원룸들" :모달창열렸니="모달창열렸니"/>
 </template>
 
 <script>
@@ -20,6 +26,10 @@ export default {
   name: 'App',
   data(){
     return {
+      DiscountValue : 5,
+      showDiscount : true,
+      원룸들오리지널 : [...data],
+      오브젝트 : {name : 'kim', age : 20},
       누른거 : 0,
       원룸들 : data,
       모달창열렸니 : false,
@@ -31,6 +41,36 @@ export default {
   methods : {
     increase(num){
       this.신고수[num] += 1;
+    },
+    priceSort(){
+      this.원룸들.sort(function(a,b){
+        return a.price - b.price
+      });
+      //[3,5,2].sort(); //2,3,5 이건 문자순 정렬임
+      /*[3,5,2].sort(function(a,b){
+        return a-b
+      })*/ //숫자 순 정렬
+
+    },
+    sortBack(){
+      //this.원룸들 = this.원룸들오리지널; 
+      //array를 = 하면왼쪽 오른쪽은 값을 공유해주세요가 된다.
+
+      this.원룸들 = [...this.원룸들오리지널]; 
+    }
+  },
+  mounted(){
+
+
+      setInterval(()=>{
+        //1초마다 내부 코드가 실행 됌
+        this.DiscountValue--;
+      },1000)
+    
+  },
+  updated(){
+    if(this.DiscountValue < 1){
+      this.showDiscount = false;
     }
   },
   components: {
@@ -42,6 +82,34 @@ export default {
 </script>
 
 <style>
+.fade-enter-from{/*시작*/
+  transform : translateY(-1000px);
+}
+.fade-enter-active{ /*transition*/
+  transition : all 1s;
+}
+.fade-enter-to{/*끝*/
+  transform : translateY(0px);
+}
+
+.fade-leave-from{/*시작*/
+  opacity:1;
+}
+.fade-leave-active{ /*transition*/
+  transition : all 1s;
+}
+.fade-leave-to{/*끝*/
+  opacity:0;
+}
+
+.start{
+  opacity : 0;
+  transition: all 1s;
+}
+.end{
+  opacity : 1;
+}
+
 body{
   margin : 0
 }
